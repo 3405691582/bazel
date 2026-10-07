@@ -83,5 +83,8 @@ function bazel_build() {
 }
 
 function get_bazel_bin_path() {
-  _run_bootstrapping_bazel info "bazel-bin" || echo "bazel-bin"
+  # Keep only the last line: the bootstrapping JVM may print warnings on
+  # stdout (e.g. log4j's "sun.reflect.Reflection.getCallerClass is not
+  # supported" when run from a non-multi-release jar).
+  { _run_bootstrapping_bazel info "bazel-bin" || echo "bazel-bin"; } | tail -n 1
 }
